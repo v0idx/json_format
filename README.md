@@ -6,4 +6,4 @@ IN PROGRESS
 
 - [x] read in json file
 - [x] output formatted file
-- [ ] fix string formatting in formatted json
+- [x] fix string formatting in formatted json

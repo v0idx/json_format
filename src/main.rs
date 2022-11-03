@@ -12,7 +12,6 @@ fn main() {
     println!("Formatting {} > {}",config.in_file, config.out_file);
     
     if config.check_if_json() {
-        //now we can read in from in file.
         let contents = json_format::read(config.in_file).unwrap_or_else( |err| { 
             eprintln!("File read error: {}",err);
             process::exit(1);

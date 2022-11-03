@@ -69,7 +69,6 @@ pub fn rm_specials(data: String) -> String {
 }
 
 pub fn j_fmt(content: String) -> String {
-    //first need to remove all whitespace and newlines
     let removed = rm_specials(content);
     let mut ret_string = String::new();
     let mut tab_count: u32 = 0;
@@ -96,7 +95,6 @@ pub fn j_fmt(content: String) -> String {
                     tab_count -= 1;
                 }
                 ':' => {
-                    // ret_string.push(' ');
                     ret_string.push(chr);
                     ret_string.push(' ');
                 }

@@ -80,6 +80,8 @@ fn j_fmt(content: String) -> String {
     let removed = rm_specials(content);
     let mut ret_string = String::new();
     let mut tab_count: u32 = 0;
+    let mut in_string: bool = false;
+
     for chr in removed.chars() {
         if ret_string.ends_with('\n') {
             if tab_count > 0 {
@@ -88,41 +90,55 @@ fn j_fmt(content: String) -> String {
                 }
             }
         }
-
-        match chr {
-            '{' => {
-                ret_string.push(chr);
-                ret_string.push('\n');
-                tab_count += 1;
+//need to add inside string logic here, only format these chars when not in a string
+        if !in_string {
+            match chr {
+                '{' => {
+                    ret_string.push(chr);
+                    ret_string.push('\n');
+                    tab_count += 1;
+                }
+                '}' => {
+                    ret_string.push('\n');
+                    ret_string.push(chr);
+                    tab_count -= 1;
+                }
+                ':' => {
+                    // ret_string.push(' ');
+                    ret_string.push(chr);
+                    ret_string.push(' ');
+                }
+                '[' => {
+                    ret_string.push(chr);
+                    ret_string.push('\n');
+                    tab_count += 1;
+                }
+                ']' => {
+                    ret_string.push('\n');
+                    ret_string.push(chr);
+                    tab_count -= 1;
+                }
+                ',' => {
+                    ret_string.push(chr);
+                    ret_string.push('\n');
+                }
+                '"' => {
+                    in_string = true;
+                    ret_string.push(chr);
+                }
+                _ => {
+                    ret_string.push(chr);
+                }
             }
-            '}' => {
-                ret_string.push('\n');
+        } else {
+            if chr != '"' {
                 ret_string.push(chr);
-                tab_count -= 1;
-            }
-            ':' => {
-                // ret_string.push(' ');
-                ret_string.push(chr);
-                ret_string.push(' ');
-            }
-            '[' => {
-                ret_string.push(chr);
-                ret_string.push('\n');
-                tab_count += 1;
-            }
-            ']' => {
-                ret_string.push('\n');
-                ret_string.push(chr);
-                tab_count -= 1;
-            }
-            ',' => {
-                ret_string.push(chr);
-                ret_string.push('\n');
-            }
-            _ => {
+            } else {
+                in_string = false;
                 ret_string.push(chr);
             }
         }
+        
     }
 
     ret_string
@@ -135,8 +151,7 @@ fn main() {
         process::exit(1);
     });
 
-    println!("{}", config.in_file);
-    println!("{}", config.out_file);
+    println!("Formatting {} > {}",config.in_file, config.out_file);
     
     if check_if_json(&config) {
         //now we can read in from in file.
